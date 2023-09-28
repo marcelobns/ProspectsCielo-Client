@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
 })
 export class MCCodesService {
 
-    private baseUrl = 'localhost:8080/v1/mc-codes';
+    private baseUrl = 'http://localhost:8080/v1/mc-codes';
 
     list(search_term: String = ''): Observable<any> {
         const search = search_term ? `?search_term=${search_term}` : '';

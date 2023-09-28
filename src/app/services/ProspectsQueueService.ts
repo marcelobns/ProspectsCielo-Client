@@ -7,7 +7,7 @@ import { IProspectsQueue } from '../interfaces/IProspectsQueue';
 })
 export class ProspectsQueueService {
 
-    private baseUrl = 'localhost:8080/v1/prospects-queue';
+    private baseUrl = 'http://localhost:8080/v1/prospects-queue';
 
     list(search_term: String = ''): Observable<any> {
         const search = search_term ? `?search_term=${search_term}` : '';

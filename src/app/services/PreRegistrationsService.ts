@@ -7,12 +7,14 @@ import { IPreRegistration } from '../interfaces/IPreRegistration';
 })
 export class PreRegistrationsService {
 
-    private baseUrl = 'localhost:8080/v1/pre-registrations';
+    private baseUrl = 'http://localhost:8080/v1/pre-registrations';
 
     list(search_term: String = ''): Observable<any> {
         const search = search_term ? `?search_term=${search_term}` : '';
         const endpoint = `${this.baseUrl}${search}`;
-
+        console.log(endpoint);
+        
+        
         return new Observable((subscriber) => {
             fetch(endpoint)
                 .then(response => (response || {}).json())
