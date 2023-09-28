@@ -1,0 +1,62 @@
+<div class="flex justify-content-center flex-wrap">
+    <div id="main" style="width: 100%; max-width: 960px;">
+        <div class="m-4">
+            <div class="m-4 pb-2">
+                <h3 style="color: #ccc; margin-bottom: -25px;">DASHBOARD</h3>
+                <h1 style="font-weight: 600;">PROSPECTOS</h1>
+            </div>
+            <div class="surface-section px-2 pt-4 md:px-6 lg:px-8 text-center">
+                <div class="grid">
+                    <div class="col-12 md:col-4 mb-2 px-5">
+                        <span class="p-3 shadow-2 mb-3 inline-block surface-card" style="border-radius: 10px; width: 100%;">
+                            <p-knob></p-knob>
+                            <div class="text-900 text-xl mb-3 font-medium">Em Fila</div>
+                        </span>
+                    </div>
+                    <div class="col-12 md:col-4 mb-2 px-5">
+                        <span class="p-3 shadow-2 mb-3 inline-block surface-card" style="border-radius: 10px; width: 100%;">
+                            <p-knob></p-knob>
+                            <div class="text-900 text-xl mb-3 font-medium">Analisados</div>
+                        </span>
+                    </div>
+                    <div class="col-12 md:col-4 mb-2 px-5">
+                        <span class="p-3 shadow-2 mb-3 inline-block surface-card" style="border-radius: 10px; width: 100%;">
+                            <p-knob></p-knob>
+                            <div class="text-900 text-xl mb-3 font-medium">Total</div>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="card flex flex-column m-4">
+                <p-timeline [value]="events" layout="horizontal" align="top">
+                    <ng-template pTemplate="content" let-event>
+                        {{ event }}
+                    </ng-template>
+                </p-timeline>
+            </div>
+        </div>
+
+        <div class="surface-section m-6">
+            <div class="card">
+                <p-table [value]="[]" [tableStyle]="{ 'min-width': '50rem' }">
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th>MCC</th>
+                            <th>Nome</th>
+                            <th>Email</th>
+                            <th></th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-prospect>
+                        <tr>
+                            <td>{{ prospect.mccode.program_type }}</td>
+                            <td>{{ prospect.name }}</td>
+                            <td>{{ prospect.email }}</td>
+                            <td></td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </div>
+        </div>
+    </div>
+</div>
