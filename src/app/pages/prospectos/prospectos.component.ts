@@ -27,11 +27,14 @@ export class ProspectosComponent implements OnInit {
 
   queue: string[];
   preRegistrations!: IPreRegistration[];
-  
+  queueList!: IProspectsQueue[];
+
   registerFormVisible: boolean = false;
   analysisFormVisible: boolean = false;
 
   formRegisterGroup!: FormGroup;
+  formAnalysisGroup!: FormGroup;
+  analysisObject!: any;
   
   registrationTypes!: any[];
   mcCodes!: any[];
@@ -41,11 +44,12 @@ export class ProspectosComponent implements OnInit {
   input_name: any;
   input_documentNumber: any;
   input_email: any;
+  input_observation: any;
 
   attributes!: IAttributes;
 
   knobQueue: number = 0;
-  knobAnalisado: number = 0;
+  knobAnalisados: number = 0;
   knobTotal: number = 100;
 
   titleRegisterDialog: string = 'Cadastrar Prospecto';
@@ -68,15 +72,15 @@ export class ProspectosComponent implements OnInit {
       input_email: new FormControl(null)
     });
 
-    this.queue = [
-      "0", "2021", "2022", "..."
-    ];
+    this.formAnalysisGroup = new FormGroup({
+      input_observation: new FormControl(null)
+    });
+    this.queue = [];
   }
 
   ngOnInit() {
-    
     this.mountTable();
-    this.mountKnob()
+    this.mountQueueInfos();
     this.getMCCodeList();
     this.resetForm();
   }
@@ -91,27 +95,30 @@ export class ProspectosComponent implements OnInit {
     });
   }
 
-  mountKnob() {
+  mountQueueInfos() {
     this.prospectsQueueService.list().subscribe((response) => {
       this.knobQueue = response.data.length;
+      this.queueList = response.data.reverse();
     });
-  }
-
-  mountLine() {
-
   }
 
   mountTable() {
     this.preRegistrationsService.list().subscribe((response) => {
-      console.log('mountTable():', response.status, response.message);
       this.preRegistrations = response.data;
       this.knobTotal = this.preRegistrations.length;
+      this.knobAnalisados = this.preRegistrations.filter((item) => item.status == 'analisado').length;
     });
   }
 
   openAnalysisDialog() {
     this.prospectsQueueService.next().subscribe((response) => {
-      console.log('openAnalysisDialog():', response);
+      this.analysisObject = response.data;
+
+      if(response.data == null){
+        this.messageService.add({ severity: 'info', summary: 'Prospect Queue', detail: 'Não há prospectos na fila' });
+        return;
+      }
+      
       this.analysisFormVisible = true;
     });
   }
@@ -156,11 +163,35 @@ export class ProspectosComponent implements OnInit {
   }
 
   saveAnalysisDialog() {
+    const preRegistration: IPreRegistration = this.beforeSaveAnalysis();
+    console.log('preRegistration', preRegistration);
+    
 
+    this.preRegistrationsService.edit(preRegistration.id as number, preRegistration).subscribe({
+      next: (response) => {
+        console.log('this.preRegistrationsService.edit:response', response);
+        if (response.status == 'Success') {
+          this.messageService.add({ severity: 'success', summary: 'Pre Registration', detail: response.message });
+          this.prospectsQueueService.remove(preRegistration.id as number).subscribe({
+            next: (response) => {
+              this.mountTable();
+              this.mountQueueInfos();
+              this.analysisFormVisible = false;
+              this.formAnalysisGroup.reset();
+            }
+          })
+        } else {
+          this.messageService.add({ severity: 'error', summary: 'Erro', detail: response.message });
+        }
+      },
+      error: (error) => {
+        this.messageService.add({ severity: 'error', summary: 'Call Api Error', detail: error.message });
+      }
+    });
   }
 
   saveAddDialog() {
-    const preRegistration: IPreRegistration = this.beforeSave();
+    const preRegistration: IPreRegistration = this.beforeSaveRegister();
 
     this.preRegistrationsService.add(preRegistration).subscribe({
       next: (response) => {
@@ -182,13 +213,12 @@ export class ProspectosComponent implements OnInit {
   }
 
   saveEditDialog(preRegistrationId : number) { 
-    const preRegistration: IPreRegistration = this.beforeSave();
+    const preRegistration: IPreRegistration = this.beforeSaveRegister();
 
     this.preRegistrationsService.edit(preRegistrationId, preRegistration).subscribe({
       next: (response) => {
         console.log('this.preRegistrationsService.add: ', response);
         if (response.status == 'Success') {
-
           this.messageService.add({ severity: 'success', summary: 'Pre Registration', detail: response.message });
           this.prospectsQueueService.remove(preRegistrationId).subscribe({
             next: (response) => {
@@ -196,8 +226,7 @@ export class ProspectosComponent implements OnInit {
               this.registerFormVisible = false;
               this.formRegisterGroup.reset();
             }
-          })
-          
+          })          
         } else {
           this.messageService.add({ severity: 'error', summary: 'Erro', detail: response.message });
         }
@@ -221,9 +250,9 @@ export class ProspectosComponent implements OnInit {
       next: (response) => {
         console.log('response:', response);
         if (response.status == 'Success') {
-          this.messageService.add({ severity: 'success', summary: 'Prospect Queue', detail: response.message });
+          this.messageService.add({ severity: 'info', summary: 'Prospect Queue', detail: response.message });
           this.mountTable();
-          this.mountKnob();
+          this.mountQueueInfos();
         } else {
           this.messageService.add({ severity: 'error', summary: 'Erro', detail: response.message });
         }
@@ -254,7 +283,16 @@ export class ProspectosComponent implements OnInit {
     });
   }
 
-  beforeSave(){
+  beforeSaveAnalysis(){
+    const preRegistration: IPreRegistration = {
+      id: this.analysisObject.preRegistration.id,
+      status: 'analisado',
+      observation: this.formAnalysisGroup.value.input_observation
+    }
+    return preRegistration;
+  }
+
+  beforeSaveRegister(){
     let attrRegistration: IAttributes = {};
 
     Object.keys(this.attributes).forEach(key => {
@@ -267,6 +305,7 @@ export class ProspectosComponent implements OnInit {
       name: this.formRegisterGroup.value.input_name,
       documentNumber: this.formRegisterGroup.value.input_documentNumber,
       email: this.formRegisterGroup.value.input_email,
+      status: 'queue',
       attributes: ''
     }
 
@@ -303,5 +342,16 @@ export class ProspectosComponent implements OnInit {
     this.input_registrationType = this.registrationTypes[0];
     this.attributes = {};
     this.formRegisterGroup.reset();
+  }
+
+  getTagSeverity(status: string): string {
+    switch (status) {
+      case 'queue':
+        return 'info';
+      case 'analisado':
+        return 'success';
+      default:
+        return '';
+    }
   }
 }

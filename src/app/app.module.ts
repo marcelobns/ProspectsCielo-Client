@@ -19,7 +19,7 @@ import { CalendarModule } from 'primeng/calendar';
 import { InputMaskModule } from 'primeng/inputmask';
 import { ToastModule } from 'primeng/toast';
 import { TagModule } from 'primeng/tag';
-
+import { InputTextareaModule } from 'primeng/inputtextarea';
 
 @NgModule({
   declarations: [
@@ -43,7 +43,8 @@ import { TagModule } from 'primeng/tag';
     CalendarModule,
     InputMaskModule,
     ToastModule,
-    TagModule
+    TagModule,
+    InputTextareaModule
   ],
   providers: [],
   bootstrap: [ProspectosComponent

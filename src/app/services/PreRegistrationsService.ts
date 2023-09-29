@@ -44,7 +44,7 @@ export class PreRegistrationsService {
         });
     }
 
-    edit(id: number, newObject: IPreRegistration): Observable<any> {
+    edit(id: number, editObject: IPreRegistration): Observable<any> {
         const endpoint = `${this.baseUrl}/edit/${id}`;
 
         const requestOptions: RequestInit = {
@@ -52,7 +52,7 @@ export class PreRegistrationsService {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(newObject),
+            body: JSON.stringify(editObject),
         };
 
         return new Observable((subscriber) => {
