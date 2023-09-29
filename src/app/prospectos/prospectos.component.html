@@ -2,7 +2,7 @@
     <div id="main" style="width: 100%; max-width: 960px;">
         <div class="m-4">
             <div class="my-4">
-                <h4 style="color: #ddd; margin-bottom: -22px;">DASHBOARD</h4>
+                <h4 style="color: #64758b36; margin-bottom: -22px;">DASHBOARD</h4>
                 <h2 style="font-weight: 600;">PROSPECTOS</h2>
             </div>
             <div class="surface-section px-2 pt-4 md:px-6 lg:px-8 text-center">
@@ -32,7 +32,7 @@
                     <p-button label="Cadastrar" icon="pi pi-sign-in" styleClass="p-button-rounded p-button-secondary p-button-raised" (click)="openAddDialog()"></p-button>
                 </div>
                 <div class="flex align-items-center justify-content-center w-4rem h-4rem font-bold border-round m-2">
-                    <p-button label="Analisar" icon="pi pi-sign-out" iconPos="right" styleClass="p-button-rounded p-button-raised p-button-text" [style]=""></p-button>
+                    <p-button label="Analisar" icon="pi pi-sign-out" iconPos="right" styleClass="p-button-rounded p-button-raised p-button-text" (click)="openAnalysisDialog()"></p-button>
                 </div>
             </div>
             <div class="card flex flex-column m-4">
@@ -56,16 +56,14 @@
                             <th>Nome</th>
                             <th>Email</th>
                             <th>Editar</th>
-                            <th>Status</th>
                         </tr>
                     </ng-template>
                     <ng-template pTemplate="body" let-register>
                         <tr>
-                            <td>{{ register.id }}</td>
+                            <td><p-tag>{{ register.id }}</p-tag></td>
                             <td>{{ register.mcCode.programType }}</td>
                             <td>{{ register.name }}</td>
                             <td>{{ register.email }}</td>
-                            <td>{{ register.status }}</td>
                             <td>
                                 <p-button (onClick)="openEditDialog(register.id)" icon="pi pi-pencil" styleClass="p-button-outlined p-button-rounded p-button-secondary"></p-button>
                             </td>
@@ -78,7 +76,7 @@
 </div>
 
 <div class="card flex justify-content-center">
-    <p-dialog id="form-dialog" header="Prospecto" [(visible)]="registerFormVisible" [modal]="true" (onHide)="onDialogHide()" [style]="{ width:'100%', 'max-width':'960px', height:'90%', 'max-height': '640px'}">
+    <p-dialog id="register-dialog" header="Prospecto" [(visible)]="registerFormVisible" [modal]="true" (onHide)="onDialogHide()" [style]="{ width:'100%', 'max-width':'960px', height:'90%', 'max-height': '640px'}">
         <ng-template pTemplate="header">
             <span class="text-xl font-bold">{{ titleRegisterDialog }}</span>
         </ng-template>
@@ -142,6 +140,19 @@
             <p-button icon="pi pi-times" label="Cancelar" (click)="registerFormVisible = false" styleClass="p-button-text p-button-secondary"></p-button>
             <p-button *ngIf="showBtnAdd" icon="pi pi-check" label="Salvar" (click)="saveAddDialog()" [disabled]="formRegisterGroup.invalid" styleClass="p-button-text"></p-button>
             <p-button *ngIf="showBtnEdit" icon="pi pi-check" label="Salvar" (click)="saveEditDialog(preRegistrationId)" [disabled]="formRegisterGroup.invalid" styleClass="p-button-text"></p-button>
+        </ng-template>
+    </p-dialog>
+
+    <p-dialog id="register-dialog" header="Prospecto" [(visible)]="analysisFormVisible" [modal]="true"
+        (onHide)="onDialogHide()" [style]="{ width:'100%', 'max-width':'960px', height:'90%', 'max-height': '640px'}">
+        <ng-template pTemplate="header">
+            <span class="text-xl font-bold">Analisar Prospecto</span>
+        </ng-template>
+        <ng-template pTemplate="footer">
+            <p-button icon="pi pi-times" label="Cancelar" (click)="analysisFormVisible = false"
+                styleClass="p-button-text p-button-secondary"></p-button>
+            <p-button *ngIf="showBtnAdd" icon="pi pi-check" label="Salvar" (click)="saveAnalysisDialog()"
+                [disabled]="formRegisterGroup.invalid" styleClass="p-button-text"></p-button>
         </ng-template>
     </p-dialog>
 </div>

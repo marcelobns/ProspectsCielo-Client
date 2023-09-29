@@ -13,13 +13,13 @@ import { IAttributes } from '../interfaces/IMetadata';
 import { IProspectsQueue } from '../interfaces/IProspectsQueue';
 
 @Component({
-  selector: 'app-dashboard',
-  templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.css'],
+  selector: 'app-prospectos',
+  templateUrl: './prospectos.component.html',
+  styleUrls: ['./prospectos.component.css'],
   providers: [DialogService, MessageService],
   encapsulation: ViewEncapsulation.None
 })
-export class DashboardComponent implements OnInit {
+export class ProspectosComponent implements OnInit {
 
   preRegistrationId!: number;
   pessoaFisica = PessoaFisica;
@@ -27,7 +27,9 @@ export class DashboardComponent implements OnInit {
 
   queue: string[];
   preRegistrations!: IPreRegistration[];
+  
   registerFormVisible: boolean = false;
+  analysisFormVisible: boolean = false;
 
   formRegisterGroup!: FormGroup;
   
@@ -107,6 +109,13 @@ export class DashboardComponent implements OnInit {
     });
   }
 
+  openAnalysisDialog() {
+    this.prospectsQueueService.next().subscribe((response) => {
+      console.log('openAnalysisDialog():', response);
+      this.analysisFormVisible = true;
+    });
+  }
+
   openAddDialog() {
     this.titleRegisterDialog = 'Cadastrar Prospecto';
     this.showBtnAdd = true;
@@ -127,8 +136,6 @@ export class DashboardComponent implements OnInit {
       this.setAttributeToForm(response.data.registrationType);
 
       setTimeout(() => {
-        console.log('this.attributes:', this.attributes);
-        console.log('attributes:', attributes);
         Object.keys(attributes).forEach(key => {
           this.formRegisterGroup.patchValue({
             [`attr_${key}`]: attributes[key]
@@ -146,6 +153,10 @@ export class DashboardComponent implements OnInit {
         this.registerFormVisible = true;
       }, 1);
     });
+  }
+
+  saveAnalysisDialog() {
+
   }
 
   saveAddDialog() {
@@ -196,6 +207,7 @@ export class DashboardComponent implements OnInit {
       }
     });
   }
+
 
   onRegistrationTypeChange(event: any) {
     this.setAttributeToForm(event.value.value);

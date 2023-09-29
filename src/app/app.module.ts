@@ -3,7 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AppRoutingModule } from './app-routing.module';
-import { DashboardComponent } from './dashboard/dashboard.component';
+import { ProspectosComponent } from './prospectos/prospectos.component';
 
 import { KnobModule } from 'primeng/knob';
 import { CardModule } from 'primeng/card';
@@ -18,11 +18,12 @@ import { AutoCompleteModule } from 'primeng/autocomplete';
 import { CalendarModule } from 'primeng/calendar';
 import { InputMaskModule } from 'primeng/inputmask';
 import { ToastModule } from 'primeng/toast';
+import { TagModule } from 'primeng/tag';
 
 
 @NgModule({
   declarations: [
-    DashboardComponent
+    ProspectosComponent
   ],
   imports: [
     BrowserModule,
@@ -41,10 +42,11 @@ import { ToastModule } from 'primeng/toast';
     InputTextModule,
     CalendarModule,
     InputMaskModule,
-    ToastModule
+    ToastModule,
+    TagModule
   ],
   providers: [],
-  bootstrap: [DashboardComponent
+  bootstrap: [ProspectosComponent
 ]
 })
 export class AppModule { }
