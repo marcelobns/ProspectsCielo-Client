@@ -17,6 +17,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { CalendarModule } from 'primeng/calendar';
 import { InputMaskModule } from 'primeng/inputmask';
+import { ToastModule } from 'primeng/toast';
 
 
 @NgModule({
@@ -39,7 +40,8 @@ import { InputMaskModule } from 'primeng/inputmask';
     AutoCompleteModule,
     InputTextModule,
     CalendarModule,
-    InputMaskModule
+    InputMaskModule,
+    ToastModule
   ],
   providers: [],
   bootstrap: [DashboardComponent

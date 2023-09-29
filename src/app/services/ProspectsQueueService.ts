@@ -51,9 +51,9 @@ export class ProspectsQueueService {
         });
     }
 
-    remove(): Observable<any> {
-        const endpoint = `${this.baseUrl}/remove`;
-        
+    remove(pre_registration_id: number): Observable<any> {
+        const endpoint = `${this.baseUrl}/remove/${pre_registration_id}`;
+
         const requestOptions: RequestInit = {
             method: 'DELETE',
             headers: {

@@ -9,19 +9,19 @@
                 <div class="grid">
                     <div class="col-12 md:col-4 mb-2 px-5">
                         <span class="p-3 shadow-2 mb-3 inline-block surface-card" style="border-radius: 10px; width: 100%;">
-                            <p-knob [(ngModel)]="knobQueue" [max]="knobTotal"></p-knob>
+                            <p-knob [(ngModel)]="knobQueue" [max]="knobTotal" [readonly]="true" valueColor="#00aef0" rangeColor="#64758b"></p-knob>
                             <div class="text-900 text-xl m-2 font-medium">Em Fila</div>
                         </span>
                     </div>
                     <div class="col-12 md:col-4 mb-2 px-5">
                         <span class="p-3 shadow-2 mb-3 inline-block surface-card" style="border-radius: 10px; width: 100%;">
-                            <p-knob [(ngModel)]="knobAnalisado" [max]="knobTotal"></p-knob>
+                            <p-knob [(ngModel)]="knobAnalisado" [max]="knobTotal" [readonly]="true" valueColor="#00aef0" rangeColor="#64758b"></p-knob>
                             <div class="text-900 text-xl m-2 font-medium">Analisados</div>
                         </span>
                     </div>
                     <div class="col-12 md:col-4 mb-2 px-5">
                         <span class="p-3 shadow-2 mb-3 inline-block surface-card" style="border-radius: 10px; width: 100%;">
-                            <p-knob [(ngModel)]="knobTotal" [max]="knobTotal"></p-knob>
+                            <p-knob [(ngModel)]="knobTotal" [max]="knobTotal" [readonly]="true" valueColor="#64758b" rangeColor="#64758b"></p-knob>
                             <div class="text-900 text-xl m-2 font-medium">Total</div>
                         </span>
                     </div>
@@ -29,10 +29,10 @@
             </div>
             <div class="flex justify-content-between flex-wrap px-6">
                 <div class="flex align-items-center justify-content-center w-4rem h-4rem font-bold border-round m-2">
-                    <p-button label="Cadastrar" icon="pi pi-sign-in" styleClass="p-button-rounded p-button-secondary" (click)="showAddDialog()"></p-button>
+                    <p-button label="Cadastrar" icon="pi pi-sign-in" styleClass="p-button-rounded p-button-secondary p-button-raised" (click)="openAddDialog()"></p-button>
                 </div>
                 <div class="flex align-items-center justify-content-center w-4rem h-4rem font-bold border-round m-2">
-                    <p-button label="Analisar" icon="pi pi-sign-out" iconPos="right" styleClass="p-button-rounded"></p-button>
+                    <p-button label="Analisar" icon="pi pi-sign-out" iconPos="right" styleClass="p-button-rounded p-button-raised p-button-text" [style]=""></p-button>
                 </div>
             </div>
             <div class="card flex flex-column m-4">
@@ -48,14 +48,15 @@
                 <h4 style="color: #555;">Cadastros mais Recentes</h4>
             </div>
             <div class="card">
-                <p-table [value]="preRegistrations" [tableStyle]="{ 'min-width': '50rem' }">
+                <p-table [value]="preRegistrations" [tableStyle]="{ 'min-width': '50rem' }" [styleClass]="'p-datatable-sm'" [rowHover]="true">
                     <ng-template pTemplate="header">
                         <tr>
                             <th>#</th>
                             <th>MCC</th>
                             <th>Nome</th>
                             <th>Email</th>
-                            <th>Ações</th>
+                            <th>Editar</th>
+                            <th>Status</th>
                         </tr>
                     </ng-template>
                     <ng-template pTemplate="body" let-register>
@@ -64,8 +65,9 @@
                             <td>{{ register.mcCode.programType }}</td>
                             <td>{{ register.name }}</td>
                             <td>{{ register.email }}</td>
+                            <td>{{ register.status }}</td>
                             <td>
-                                <p-button icon="pi pi-pencil" styleClass="p-button-rounded p-button-secondary"></p-button>
+                                <p-button (onClick)="openEditDialog(register.id)" icon="pi pi-pencil" styleClass="p-button-outlined p-button-rounded p-button-secondary"></p-button>
                             </td>
                         </tr>
                     </ng-template>
@@ -76,11 +78,11 @@
 </div>
 
 <div class="card flex justify-content-center">
-    <p-dialog id="form-dialog" header="Prospecto" [(visible)]="addVisible" [modal]="true" [style]="{ width:'100%', 'max-width':'960px', height:'90%', 'max-height': '640px'}">
+    <p-dialog id="form-dialog" header="Prospecto" [(visible)]="registerFormVisible" [modal]="true" (onHide)="onDialogHide()" [style]="{ width:'100%', 'max-width':'960px', height:'90%', 'max-height': '640px'}">
         <ng-template pTemplate="header">
-            <span class="text-xl font-bold">Cadastrar Prospecto</span>
+            <span class="text-xl font-bold">{{ titleRegisterDialog }}</span>
         </ng-template>
-        <form [formGroup]="formAddGroup" class="mt-2">
+        <form [formGroup]="formRegisterGroup" class="mt-2">
             <div class="field grid">
                 <label for="registration-type" class="col-12 mb-2 md:col-4 md:mb-0">Categoria do Comerciante (MCC)</label>
                 <div class="col-12 md:col-8">
@@ -137,8 +139,11 @@
             </div>
         </form>
         <ng-template pTemplate="footer">
-            <p-button icon="pi pi-times" label="Cancelar" (click)="addVisible = false" styleClass="p-button-text p-button-secondary"></p-button>
-            <p-button icon="pi pi-check" label="Salvar"  (click)="saveAddDialog()" [disabled]="formAddGroup.invalid" styleClass="p-button-text"></p-button>
+            <p-button icon="pi pi-times" label="Cancelar" (click)="registerFormVisible = false" styleClass="p-button-text p-button-secondary"></p-button>
+            <p-button *ngIf="showBtnAdd" icon="pi pi-check" label="Salvar" (click)="saveAddDialog()" [disabled]="formRegisterGroup.invalid" styleClass="p-button-text"></p-button>
+            <p-button *ngIf="showBtnEdit" icon="pi pi-check" label="Salvar" (click)="saveEditDialog(preRegistrationId)" [disabled]="formRegisterGroup.invalid" styleClass="p-button-text"></p-button>
         </ng-template>
     </p-dialog>
 </div>
+
+<p-toast position="bottom-center"></p-toast>

@@ -9,9 +9,11 @@ export class PreRegistrationsService {
 
     private baseUrl = 'http://localhost:8080/v1/pre-registrations';
 
-    list(search_term: String = ''): Observable<any> {
-        const search = search_term ? `?search_term=${search_term}` : '';
-        const endpoint = `${this.baseUrl}${search}`;
+    list(search_term: String = '', order_by = 'id desc'): Observable<any> {
+        const search = search_term ? `search_term=${search_term}` : 'search_term=%';
+        const order = order_by ? `order_by=${order_by}` : 'order_by=id desc';
+        const params = [search, order].join('&');
+        const endpoint = `${this.baseUrl}?${params}`;
         console.log(endpoint);
         
         
