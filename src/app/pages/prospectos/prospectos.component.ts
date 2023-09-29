@@ -324,9 +324,6 @@ export class ProspectosComponent implements OnInit {
     return preRegistration;
   }
 
-  extractDetail(e:String){
-
-  }
   onDialogHide(){
     this.resetForm();
   }
