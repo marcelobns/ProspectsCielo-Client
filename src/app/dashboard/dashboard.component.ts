@@ -26,16 +26,22 @@ export class DashboardComponent implements OnInit {
   preRegistrations!: IPreRegistration[];
   addVisible: boolean = false;
 
-  formGroup!: FormGroup;
+  formAddGroup!: FormGroup;
   
   registrationTypes!: any[];
-  selectedRegistrationType: any;
-
   mcCodes!: any[];
-  selectedMCCode: any;
-  inputNome: any;
-  inputDocumentNumber: any;
+  
+  input_mcCode: any;
+  input_registrationType: any;
+  input_name: any;
+  input_documentNumber: any;
+  input_email: any;
+
   attributes!: IAttributes;
+
+  knobQueue: number = 0;
+  knobAnalisado: number = 0;
+  knobTotal: number = 100;
 
   constructor(
     private mccCodeService: MCCodesService, 
@@ -44,11 +50,12 @@ export class DashboardComponent implements OnInit {
     public dialogService: DialogService,
     private formBuilder: FormBuilder) {
 
-    this.formGroup = new FormGroup({
-      selectedRegistrationType: new FormControl(null),
-      selectedMCCode: new FormControl(null),
-      inputNome: new FormControl(null),
-      inputDocumentNumber: new FormControl(null),
+    this.formAddGroup = new FormGroup({
+      input_registrationType: new FormControl(null),
+      input_mcCode: new FormControl(null),
+      input_name: new FormControl(null),
+      input_documentNumber: new FormControl(null),
+      input_email: new FormControl(null)
     });
 
     this.queue = [
@@ -59,16 +66,16 @@ export class DashboardComponent implements OnInit {
   ngOnInit() {
 
     this.registrationTypes = [
-      { label: 'Selecione o Tipo de Registro', value: null, document: 'Número do Documento', name: 'Nome' },
-      { label: 'Pessoa Física', value: 'pessoa_fisica', document: 'CPF', name: 'Nome Completo' },
-      { label: 'Pessoa Jurídica', value: 'pessoa_juridica', document: 'CNPJ', name: 'Razão Social' }
+      { label: 'Selecione o Tipo de Registro', value: null, document: 'Número do Documento', name: 'Nome', mask:"", email: 'E-mail' },
+      { label: 'Pessoa Física', value: 'pessoa_fisica', document: 'CPF', name: 'Nome Completo', mask:"999.999.999-99", email: 'E-mail Pessoal' },
+      { label: 'Pessoa Jurídica', value: 'pessoa_juridica', document: 'CNPJ', name: 'Razão Social', mask:"99.999.999/9999-99", email: 'E-mail Institucional' }
     ];
-    this.selectedRegistrationType = this.registrationTypes[0];
+    this.input_registrationType = this.registrationTypes[0];
 
 
     this.mountTable();
     this.getMCCodeList();
-    
+    this.mountKnob()
   }
 
   getMCCodeList() {
@@ -82,7 +89,9 @@ export class DashboardComponent implements OnInit {
   }
 
   mountKnob() {
-
+    this.prospectsQueueService.list().subscribe((response) => {
+      this.knobQueue = response.data.length;
+    });
   }
 
   mountLine() {
@@ -93,6 +102,7 @@ export class DashboardComponent implements OnInit {
     this.preRegistrationsService.list().subscribe((response) => {
       console.log('mountTable():', response.status, response.message);
       this.preRegistrations = response.data;
+      this.knobTotal = this.preRegistrations.length;
     });
   }
 
@@ -100,13 +110,17 @@ export class DashboardComponent implements OnInit {
     this.addVisible = true;
   }
 
+  saveAddDialog() {
+    console.log('saveAddDialog():', this.formAddGroup.value);
+  }
+
   onRegistrationTypeChange(event: any) {
-    this.selectedRegistrationType = this.registrationTypes.find(type => type.value == event.value.value);
+    this.input_registrationType = this.registrationTypes.find(type => type.value == event.value.value);
     
-    if(this.selectedRegistrationType.value == 'pessoa_fisica') {
+    if (this.input_registrationType.value == 'pessoa_fisica') {
       this.attributes = this.pessoaFisica as IPessoaFisica; 
 
-    } else if (this.selectedRegistrationType.value == 'pessoa_juridica') {
+    } else if (this.input_registrationType.value == 'pessoa_juridica') {
       this.attributes = this.pessoaJuridica as IPessoaJuridica;
     } 
 
@@ -115,9 +129,7 @@ export class DashboardComponent implements OnInit {
       return acc;
     }, {});
     Object.keys(controls).forEach(key => {
-      this.formGroup.addControl(key, controls[key]);
-    });
-    
+      this.formAddGroup.addControl(key, controls[key]);
+    }); 
   }
-
 }

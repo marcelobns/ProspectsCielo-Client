@@ -1,25 +1,25 @@
 import { IFieldFormat, IAttributes } from './IMetadata';
 
 export interface IPessoaJuridica extends IAttributes {
-    contato_nome: IFieldFormat;
-    contato_cpf: IFieldFormat;
-    contato_email: IFieldFormat;
+    attr_contatoNome: IFieldFormat;
+    attr_contatoCpf: IFieldFormat;
+    attr_contatoEmail: IFieldFormat;
 }
 
 export const PessoaJuridica: IPessoaJuridica = {
-    contato_nome: {
+    attr_contatoNome: {
         order: 2,
         type: 'text',
         label: 'Nome do Contato',
         pattern: ''
     },
-    contato_cpf: {
+    attr_contatoCpf: {
         order: 3,
         type: 'text',
         label: 'CPF do Contato',
         pattern: ''
     },
-    contato_email: {
+    attr_contatoEmail: {
         order: 4,
         type: 'text',
         label: 'E-mail do Contato',

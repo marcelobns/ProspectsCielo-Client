@@ -9,19 +9,19 @@
                 <div class="grid">
                     <div class="col-12 md:col-4 mb-2 px-5">
                         <span class="p-3 shadow-2 mb-3 inline-block surface-card" style="border-radius: 10px; width: 100%;">
-                            <p-knob></p-knob>
+                            <p-knob [(ngModel)]="knobQueue" [max]="knobTotal"></p-knob>
                             <div class="text-900 text-xl m-2 font-medium">Em Fila</div>
                         </span>
                     </div>
                     <div class="col-12 md:col-4 mb-2 px-5">
                         <span class="p-3 shadow-2 mb-3 inline-block surface-card" style="border-radius: 10px; width: 100%;">
-                            <p-knob></p-knob>
+                            <p-knob [(ngModel)]="knobAnalisado" [max]="knobTotal"></p-knob>
                             <div class="text-900 text-xl m-2 font-medium">Analisados</div>
                         </span>
                     </div>
                     <div class="col-12 md:col-4 mb-2 px-5">
                         <span class="p-3 shadow-2 mb-3 inline-block surface-card" style="border-radius: 10px; width: 100%;">
-                            <p-knob></p-knob>
+                            <p-knob [(ngModel)]="knobTotal" [max]="knobTotal"></p-knob>
                             <div class="text-900 text-xl m-2 font-medium">Total</div>
                         </span>
                     </div>
@@ -76,19 +76,19 @@
 </div>
 
 <div class="card flex justify-content-center">
-    <p-dialog id="form-dialog" header="Prospecto" [(visible)]="addVisible" [modal]="true" [style]="{ width:'100%', 'max-width':'960px', height:'80%'}">
+    <p-dialog id="form-dialog" header="Prospecto" [(visible)]="addVisible" [modal]="true" [style]="{ width:'100%', 'max-width':'960px', height:'90%', 'max-height': '640px'}">
         <ng-template pTemplate="header">
             <span class="text-xl font-bold">Cadastrar Prospecto</span>
         </ng-template>
-        <form [formGroup]="formGroup" class="mt-2">
+        <form [formGroup]="formAddGroup" class="mt-2">
             <div class="field grid">
                 <label for="registration-type" class="col-12 mb-2 md:col-4 md:mb-0">Categoria do Comerciante (MCC)</label>
                 <div class="col-12 md:col-8">
-                    <p-dropdown [options]="mcCodes" formControlName="selectedMCCode" optionLabel="combined" [filter]="true"
-                        filterBy="combined" [showClear]="true" placeholder="Selecione um MCC" [style]="{width: '100%'}">
-                        <ng-template pTemplate="selectedMCCode">
-                            <div class="flex align-items-center gap-2" *ngIf="selectedMCCode">
-                                <div style="max-width: 300px; word-wrap: break-word;">{{ selectedMCCode.combined }}</div>
+                    <p-dropdown [options]="mcCodes" formControlName="input_mcCode" optionLabel="combined" [filter]="true"
+                        filterBy="combined" [showClear]="true" placeholder="Selecione um MCC" [style]="{width: '100%'}" [required]="true">
+                        <ng-template pTemplate="mcCode">
+                            <div class="flex align-items-center gap-2" *ngIf="input_mcCode">
+                                <div style="max-width: 300px; word-wrap: break-word;">{{ input_mcCode.combined }}</div>
                             </div>
                         </ng-template>
                         <ng-template let-mcCode pTemplate="item">
@@ -102,33 +102,43 @@
             <div class="field grid">
                 <label for="registration-type" class="col-12 mb-2 md:col-4 md:mb-0">Tipo de Registro</label>
                 <div class="col-12 md:col-8">
-                    <p-dropdown [options]="registrationTypes" formControlName="selectedRegistrationType" optionLabel="label" [style]="{width: '100%'}" (onChange)="onRegistrationTypeChange($event)"></p-dropdown>
+                    <p-dropdown [options]="registrationTypes" formControlName="input_registrationType" optionLabel="label" [style]="{width: '100%'}" (onChange)="onRegistrationTypeChange($event)" [required]="true"></p-dropdown>
                 </div>
             </div>
             <div class="field grid">
-                <label for="registration-type" class="col-12 mb-2 md:col-4 md:mb-0">{{ selectedRegistrationType?.document }}</label>
+                <label for="registration-type" class="col-12 mb-2 md:col-4 md:mb-0">{{ input_registrationType?.document }}</label>
                 <div class="col-12 md:col-8">
-                    <input type="text" pInputText formControlName="inputDocumentNumber" [style]="{width: '100%'}" />
+                    <p-inputMask [mask]="input_registrationType.mask" [placeholder]="input_registrationType.mask" formControlName="input_documentNumber" [style]="{width: '100%'}" [required]="true"></p-inputMask>
                 </div>
             </div>
             <div class="field grid">
-                <label for="registration-type" class="col-12 mb-2 md:col-4 md:mb-0">{{ selectedRegistrationType.name }}</label>
+                <label for="registration-type" class="col-12 mb-2 md:col-4 md:mb-0">{{ input_registrationType.name }}</label>
                 <div class="col-12 md:col-8">
-                    <input type="text" pInputText formControlName="inputNome" [style]="{width: '100%'}"/>
+                    <input type="text" pInputText formControlName="input_name" [style]="{width: '100%'}" [required]="true"/>
+                </div>
+            </div>
+            <div class="field grid">
+                <label for="registration-type" class="col-12 mb-2 md:col-4 md:mb-0">{{ input_registrationType.email }}</label>
+                <div class="col-12 md:col-8">
+                    <input type="text" pInputText formControlName="input_email" [style]="{width: '100%'}" [required]="true" />
                 </div>
             </div>
             <div *ngFor="let field of attributes | keyvalue" class="field grid">
                 <label for="{{ field.value.label }}" class="col-12 mb-2 md:col-4 md:mb-0">{{ field.value.label }}</label>
                 <div *ngIf="field.value.type === 'select'" class="col-12 md:col-8">
-                    <p-dropdown formControlName="{{ field.key }}" [options]="field.value.options" optionLabel="label" [style]="{width: '100%'}" ></p-dropdown>
+                    <p-dropdown formControlName="{{ field.key }}" [options]="field.value.options" optionLabel="label" [style]="{width: '100%'}" [required]="true"></p-dropdown>
                 </div>
                 <div *ngIf="field.value.type === 'date'" class="col-12 md:col-8">
-                    <p-calendar formControlName="{{ field.key }}" [style]="{width: '100%'}" ></p-calendar>
+                    <p-inputMask mask="99/99/9999" slotChar="dd/mm/aaaa" formControlName="{{ field.key }}" [required]="true" [style]="{width: '100%'}"></p-inputMask>
                 </div>
                 <div *ngIf="field.value.type === 'text'" class="col-12 md:col-8">
-                    <input pInputText formControlName="{{ field.key }}" [style]="{width: '100%'}" />
+                    <input pInputText formControlName="{{ field.key }}" [style]="{width: '100%'}" [required]="true"/>
                 </div>
             </div>
         </form>
+        <ng-template pTemplate="footer">
+            <p-button icon="pi pi-times" label="Cancelar" (click)="addVisible = false" styleClass="p-button-text p-button-secondary"></p-button>
+            <p-button icon="pi pi-check" label="Salvar"  (click)="saveAddDialog()" [disabled]="formAddGroup.invalid" styleClass="p-button-text"></p-button>
+        </ng-template>
     </p-dialog>
 </div>
