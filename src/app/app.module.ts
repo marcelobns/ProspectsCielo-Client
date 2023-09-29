@@ -12,7 +12,10 @@ import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 import { DropdownModule } from 'primeng/dropdown';
+import { InputTextModule } from 'primeng/inputtext';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { AutoCompleteModule } from 'primeng/autocomplete';
+import { CalendarModule } from 'primeng/calendar';
 
 @NgModule({
   declarations: [
@@ -30,7 +33,10 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     DialogModule,
     DropdownModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    AutoCompleteModule,
+    InputTextModule,
+    CalendarModule
   ],
   providers: [],
   bootstrap: [DashboardComponent
