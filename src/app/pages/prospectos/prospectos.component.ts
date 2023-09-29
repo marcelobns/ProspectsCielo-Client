@@ -1,16 +1,16 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { MCCodesService } from '../services/MCCodesService';
-import { PreRegistrationsService } from '../services/PreRegistrationsService';
-import { ProspectsQueueService } from '../services/ProspectsQueueService';
+import { MCCodesService } from '../../services/MCCodesService';
+import { PreRegistrationsService } from '../../services/PreRegistrationsService';
+import { ProspectsQueueService } from '../../services/ProspectsQueueService';
 import { DialogService } from 'primeng/dynamicdialog'
 import { FormControl, FormGroup, FormBuilder } from '@angular/forms';
 import { MessageService } from 'primeng/api';
 
-import { IPreRegistration } from '../interfaces/IPreRegistration';
-import { IPessoaFisica, PessoaFisica } from '../interfaces/IPessoaFisica';
-import { IPessoaJuridica, PessoaJuridica } from '../interfaces/IPessoaJuridica';
-import { IAttributes } from '../interfaces/IMetadata';
-import { IProspectsQueue } from '../interfaces/IProspectsQueue';
+import { IPreRegistration } from '../../interfaces/IPreRegistration';
+import { IPessoaFisica, PessoaFisica } from '../../interfaces/IPessoaFisica';
+import { IPessoaJuridica, PessoaJuridica } from '../../interfaces/IPessoaJuridica';
+import { IAttributes } from '../../interfaces/IMetadata';
+import { IProspectsQueue } from '../../interfaces/IProspectsQueue';
 
 @Component({
   selector: 'app-prospectos',

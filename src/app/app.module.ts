@@ -3,7 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AppRoutingModule } from './app-routing.module';
-import { ProspectosComponent } from './prospectos/prospectos.component';
+import { ProspectosComponent } from './pages/prospectos/prospectos.component';
 
 import { KnobModule } from 'primeng/knob';
 import { CardModule } from 'primeng/card';
