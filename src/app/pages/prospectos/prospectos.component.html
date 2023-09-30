@@ -36,6 +36,9 @@
                 </div>
             </div>
             <div class="card flex flex-column m-4">
+                <div class="text-center">
+                    <h4 style="color: #777;">Fila para Análise</h4>
+                </div>
                 <p-timeline [value]="queueList" layout="horizontal" align="top">
                     <ng-template pTemplate="content" let-prospects>
                         #{{ prospects.preRegistrationId }}
@@ -45,7 +48,7 @@
         </div>
         <div class="surface-section m-6">
             <div class="text-center">
-                <h4 style="color: #555;">Cadastros mais Recentes</h4>
+                <h4 style="color: #777;">Cadastros mais Recentes</h4>
             </div>
             <div class="card">
                 <p-table [value]="preRegistrations" [tableStyle]="{ 'min-width': '50rem' }" [styleClass]="'p-datatable-sm'" [rowHover]="true">
