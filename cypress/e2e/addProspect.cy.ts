@@ -30,8 +30,8 @@ describe('Prospects Management', () => {
     console.log(birthDate.toLocaleDateString('pt-BR'));
     cy.get('[ng-reflect-name="attr_dataNascimento"]').click().type(birthDate.toLocaleDateString('pt-BR'));
 
-    // cy.get('p-button[label="Salvar"]').click();
-    // cy.get('.p-toast-message-text').should('contain', 'New Pre Registration created successfully');
+    cy.get('p-button[label="Salvar"]').click();
+    cy.get('.p-toast-message-text').should('contain', 'New Pre Registration created successfully');
   });
 
   it('Fluxo para cadastrar um Prospecto de Pessoa Jurídica', () => {
@@ -65,8 +65,8 @@ describe('Prospects Management', () => {
     cy.get('[ng-reflect-name="attr_contatoNome"]').type(contatoNome);
     
 
-    // cy.get('p-button[label="Salvar"]').click();
-    // cy.get('.p-toast-message-text').should('contain', 'New Pre Registration created successfully');
+    cy.get('p-button[label="Salvar"]').click();
+    cy.get('.p-toast-message-text').should('contain', 'New Pre Registration created successfully');
   });
 
 });
